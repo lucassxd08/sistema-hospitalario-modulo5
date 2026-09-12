@@ -16,7 +16,7 @@ public class Alergia {
 
     private Long historiaClinicaId;
 
-    private String alergia;
+    private String nombre;
 
     private String tipo;
 
@@ -30,10 +30,10 @@ public class Alergia {
     public Alergia() {
     }
 
-    public Alergia(Long historiaClinicaId, String alergia, String tipo, String reaccion,
+    public Alergia(Long historiaClinicaId, String nombre, String tipo, String reaccion,
                    String fechaRegistro, String observaciones) {
         this.historiaClinicaId = historiaClinicaId;
-        this.alergia = alergia;
+        this.nombre = nombre;
         this.tipo = tipo;
         this.reaccion = reaccion;
         this.fechaRegistro = fechaRegistro;
@@ -56,12 +56,12 @@ public class Alergia {
         this.historiaClinicaId = historiaClinicaId;
     }
 
-    public String getAlergia() {
-        return alergia;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setAlergia(String alergia) {
-        this.alergia = alergia;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getTipo() {

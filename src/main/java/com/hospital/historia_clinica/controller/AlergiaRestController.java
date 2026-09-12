@@ -51,7 +51,7 @@ public class AlergiaRestController {
             return ResponseEntity.notFound().build();
         }
         a.setHistoriaClinicaId(datos.getHistoriaClinicaId());
-        a.setAlergia(datos.getAlergia());
+        a.setNombre(datos.getNombre());
         a.setTipo(datos.getTipo());
         a.setReaccion(datos.getReaccion());
         a.setFechaRegistro(datos.getFechaRegistro());

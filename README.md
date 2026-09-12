@@ -53,7 +53,7 @@ Las enfermedades del formulario son las del documento: diabetes, hipertensión, 
 
 Entidad `Alergia` con las cuatro capas completas y vistas Thymeleaf.
 
-Campos: `id`, `historiaClinicaId`, `alergia`, `tipo`, `reaccion`, `fechaRegistro`, `observaciones`.
+Campos: `id`, `historiaClinicaId`, `nombre`, `tipo`, `reaccion`, `fechaRegistro`, `observaciones`.
 
 Los tipos que maneja el formulario son medicamento, alimento, ambiental y otro. El ejemplo del documento del módulo es una alergia a la penicilina con erupción cutánea como reacción.
 
@@ -115,7 +115,7 @@ POST http://localhost:8080/api/antecedentes-familiares
 POST http://localhost:8080/api/alergias
 {
   "historiaClinicaId": 125,
-  "alergia": "Penicilina",
+  "nombre": "Penicilina",
   "tipo": "Medicamento",
   "reaccion": "Erupcion cutanea",
   "fechaRegistro": "11/09/2026",
