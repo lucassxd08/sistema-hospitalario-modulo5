@@ -1,7 +1,10 @@
 # Sistema Hospitalario — Módulo 5: Historia Clínica
 
 Proyecto de la Evaluación N° 01 del curso Desarrollo de Aplicaciones Web (Semana 4).
-Trabajo en equipo de 2 integrantes.
+
+**Integrantes:**
+- Renzo León
+- Lucas Inga
 
 La especificación completa del módulo está en [MODULO-5-HISTORIA-CLINICA.md](MODULO-5-HISTORIA-CLINICA.md).
 
@@ -19,12 +22,12 @@ Arquitectura por capas: Entidad → Repository → Service → Controller.
 
 | Requerimiento | Descripción | Responsable | Estado |
 |---|---|---|---|
-| RF-HC-01 | Generar un número único de historia clínica | Compañero | Pendiente |
-| RF-HC-02 | Consultar la historia clínica de un paciente | Compañero | Pendiente |
-| RF-HC-03 | Mostrar los datos básicos del paciente | Compañero | Pendiente |
-| RF-HC-05 | Registrar antecedentes personales | Renzo | **Terminado** |
-| RF-HC-06 | Registrar antecedentes familiares | Renzo | **Terminado** |
-| RF-HC-07 | Registrar alergias | Renzo | Pendiente |
+| RF-HC-01 | Generar un número único de historia clínica | Lucas Inga | Pendiente |
+| RF-HC-02 | Consultar la historia clínica de un paciente | Lucas Inga | Pendiente |
+| RF-HC-03 | Mostrar los datos básicos del paciente | Lucas Inga | Pendiente |
+| RF-HC-05 | Registrar antecedentes personales | Renzo León | **Terminado** |
+| RF-HC-06 | Registrar antecedentes familiares | Renzo León | **Terminado** |
+| RF-HC-07 | Registrar alergias | Renzo León | Pendiente |
 
 ---
 
@@ -132,6 +135,6 @@ La aplicación queda en http://localhost:8080
 ## Pendiente
 
 - RF-HC-07: registrar alergias.
-- Los tres requerimientos del compañero: entidad `Paciente`, entidad `HistoriaClinica` y el número único de historia clínica.
+- Los tres requerimientos de Lucas Inga: entidad `Paciente`, entidad `HistoriaClinica` y el número único de historia clínica.
 - Cuando exista la entidad `HistoriaClinica`, cambiar el campo `historiaClinicaId` de los antecedentes por una relación real entre entidades, porque la rúbrica evalúa las relaciones de la base de datos.
 - Vista de panel con el menú de navegación del módulo.
