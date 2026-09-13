@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "antecedente")
@@ -14,7 +16,9 @@ public class Antecedente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long historiaClinicaId;
+    @ManyToOne
+    @JoinColumn(name = "historia_clinica_id")
+    private HistoriaClinica historiaClinica;
 
     private String categoria;
 
@@ -28,9 +32,9 @@ public class Antecedente {
     public Antecedente() {
     }
 
-    public Antecedente(Long historiaClinicaId, String categoria, String descripcion,
+    public Antecedente(HistoriaClinica historiaClinica, String categoria, String descripcion,
                        String fechaRegistro, String observaciones) {
-        this.historiaClinicaId = historiaClinicaId;
+        this.historiaClinica = historiaClinica;
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.fechaRegistro = fechaRegistro;
@@ -45,13 +49,8 @@ public class Antecedente {
         this.id = id;
     }
 
-    public Long getHistoriaClinicaId() {
-        return historiaClinicaId;
-    }
-
-    public void setHistoriaClinicaId(Long historiaClinicaId) {
-        this.historiaClinicaId = historiaClinicaId;
-    }
+    public HistoriaClinica getHistoriaClinica() { return historiaClinica; }
+    public void setHistoriaClinica(HistoriaClinica historiaClinica) { this.historiaClinica = historiaClinica; }
 
     public String getCategoria() {
         return categoria;

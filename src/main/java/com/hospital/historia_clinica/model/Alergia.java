@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "alergia")
@@ -14,7 +16,9 @@ public class Alergia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long historiaClinicaId;
+    @ManyToOne
+    @JoinColumn(name = "historia_clinica_id")
+    private HistoriaClinica historiaClinica;
 
     private String nombre;
 
@@ -30,9 +34,9 @@ public class Alergia {
     public Alergia() {
     }
 
-    public Alergia(Long historiaClinicaId, String nombre, String tipo, String reaccion,
+    public Alergia(HistoriaClinica historiaClinica, String nombre, String tipo, String reaccion,
                    String fechaRegistro, String observaciones) {
-        this.historiaClinicaId = historiaClinicaId;
+        this.historiaClinica = historiaClinica;
         this.nombre = nombre;
         this.tipo = tipo;
         this.reaccion = reaccion;
@@ -48,13 +52,8 @@ public class Alergia {
         this.id = id;
     }
 
-    public Long getHistoriaClinicaId() {
-        return historiaClinicaId;
-    }
-
-    public void setHistoriaClinicaId(Long historiaClinicaId) {
-        this.historiaClinicaId = historiaClinicaId;
-    }
+    public HistoriaClinica getHistoriaClinica() { return historiaClinica; }
+    public void setHistoriaClinica(HistoriaClinica historiaClinica) { this.historiaClinica = historiaClinica; }
 
     public String getNombre() {
         return nombre;

@@ -50,7 +50,7 @@ public class AntecedenteRestController {
         if (a == null) {
             return ResponseEntity.notFound().build();
         }
-        a.setHistoriaClinicaId(datos.getHistoriaClinicaId());
+        a.setHistoriaClinica(datos.getHistoriaClinica());
         a.setCategoria(datos.getCategoria());
         a.setDescripcion(datos.getDescripcion());
         a.setFechaRegistro(datos.getFechaRegistro());
