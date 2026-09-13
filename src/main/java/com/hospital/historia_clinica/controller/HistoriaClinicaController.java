@@ -64,4 +64,15 @@ public class HistoriaClinicaController {
         historiaClinicaService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/condiciones/{condicionId}")
+    public ResponseEntity<HistoriaClinica> agregarCondicion(@PathVariable Long id, @PathVariable Long condicionId) {
+        return ResponseEntity.ok(historiaClinicaService.agregarCondicionFamiliar(id, condicionId));
+    }
+
+    @GetMapping("/{id}/condiciones")
+    public ResponseEntity<java.util.List<com.hospital.historia_clinica.model.CondicionMedica>> listarCondiciones(@PathVariable Long id) {
+        return ResponseEntity.ok(historiaClinicaService.listarCondicionesFamiliares(id));
+    }
+
 }

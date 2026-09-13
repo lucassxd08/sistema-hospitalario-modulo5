@@ -16,12 +16,15 @@ public class HistoriaClinicaService {
 
     private final HistoriaClinicaRepository historiaClinicaRepository;
     private final PacienteRepository pacienteRepository;
+    private final com.hospital.historia_clinica.repository.CondicionMedicaRepository condicionMedicaRepository;
 
     @Autowired
     public HistoriaClinicaService(HistoriaClinicaRepository historiaClinicaRepository,
-                                  PacienteRepository pacienteRepository) {
+                                  PacienteRepository pacienteRepository,
+                                  com.hospital.historia_clinica.repository.CondicionMedicaRepository condicionMedicaRepository) {
         this.historiaClinicaRepository = historiaClinicaRepository;
         this.pacienteRepository = pacienteRepository;
+        this.condicionMedicaRepository = condicionMedicaRepository;
     }
 
     // RF-HC-01: Generar historia clínica única para un paciente
@@ -67,4 +70,20 @@ public class HistoriaClinicaService {
     public void eliminar(Long id) {
         historiaClinicaRepository.deleteById(id);
     }
+
+    public HistoriaClinica agregarCondicionFamiliar(Long historiaId, Long condicionId) {
+        HistoriaClinica historia = historiaClinicaRepository.findById(historiaId)
+                .orElseThrow(() -> new RuntimeException("Historia clínica no encontrada"));
+        com.hospital.historia_clinica.model.CondicionMedica condicion = condicionMedicaRepository.findById(condicionId)
+                .orElseThrow(() -> new RuntimeException("Condición médica no encontrada"));
+        historia.agregarCondicion(condicion);
+        return historiaClinicaRepository.save(historia);
+    }
+
+    public java.util.List<com.hospital.historia_clinica.model.CondicionMedica> listarCondicionesFamiliares(Long historiaId) {
+        HistoriaClinica historia = historiaClinicaRepository.findById(historiaId)
+                .orElseThrow(() -> new RuntimeException("Historia clínica no encontrada"));
+        return historia.getAntecedentesFamiliares();
+    }
+
 }

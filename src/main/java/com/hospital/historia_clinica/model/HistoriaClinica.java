@@ -2,6 +2,8 @@ package com.hospital.historia_clinica.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "historia_clinica")
@@ -23,6 +25,14 @@ public class HistoriaClinica {
 
     @Column(nullable = false, length = 20)
     private String estado; // ACTIVA / INACTIVA
+
+    @ManyToMany
+    @JoinTable(
+            name = "historia_condicion",
+            joinColumns = @JoinColumn(name = "historia_clinica_id"),
+            inverseJoinColumns = @JoinColumn(name = "condicion_id")
+    )
+    private List<CondicionMedica> antecedentesFamiliares = new ArrayList<>();
 
     // Constructores
     public HistoriaClinica() {
@@ -74,5 +84,17 @@ public class HistoriaClinica {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public List<CondicionMedica> getAntecedentesFamiliares() {
+        return antecedentesFamiliares;
+    }
+
+    public void setAntecedentesFamiliares(List<CondicionMedica> antecedentesFamiliares) {
+        this.antecedentesFamiliares = antecedentesFamiliares;
+    }
+
+    public void agregarCondicion(CondicionMedica condicion) {
+        this.antecedentesFamiliares.add(condicion);
     }
 }
