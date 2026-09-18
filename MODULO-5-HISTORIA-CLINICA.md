@@ -37,16 +37,16 @@ HISTORIA CLÍNICA
 
 | Integrante | Requerimientos | Alcance |
 |---|---|---|
-| **Compañero** | RF-HC-01, RF-HC-02, RF-HC-03 | Creación de la historia clínica, número único, consulta de la historia y visualización de los datos básicos del paciente |
-| **Yo (Renzo)** | RF-HC-05, RF-HC-06, RF-HC-07 | Antecedentes personales, antecedentes familiares y alergias |
+| **Lucas Inga** | RF-HC-01, RF-HC-02, RF-HC-03 | Creación de la historia clínica, número único, consulta de la historia y visualización de los datos básicos del paciente |
+| **Renzo León** | RF-HC-05, RF-HC-06, RF-HC-07 | Antecedentes personales, antecedentes familiares y alergias |
 
-### Lo que hará mi compañero
+### Lo que hará Lucas
 
 - **RF-HC-01:** El sistema deberá generar un número único de historia clínica para cada paciente.
 - **RF-HC-02:** El sistema deberá permitir consultar la historia clínica de un paciente.
 - **RF-HC-03:** El sistema deberá mostrar los datos básicos del paciente asociados a su historia clínica.
 
-### Lo que haré yo
+### Lo que hará Renzo
 
 - **RF-HC-05:** El sistema deberá permitir registrar antecedentes personales.
 - **RF-HC-06:** El sistema deberá permitir registrar antecedentes familiares.
@@ -54,7 +54,7 @@ HISTORIA CLÍNICA
 
 ### Punto de acople entre los dos
 
-Mi parte depende de la suya: los antecedentes y las alergias se registran **sobre una historia clínica que ya existe**. Por eso la entidad `HistoriaClinica` y su relación con `Paciente` la define él primero, y yo engancho mis entidades a esa historia clínica mediante su ID. Conviene acordar desde el inicio el nombre de la entidad, el nombre del campo identificador y el paquete donde vive, para no chocar al unir el código.
+La parte de Renzo depende de la de Lucas: los antecedentes y las alergias se registran **sobre una historia clínica que ya existe**. Por eso la entidad `HistoriaClinica` y su relación con `Paciente` las define Lucas primero, y Renzo engancha sus entidades a esa historia clínica mediante su ID. Conviene acordar desde el inicio el nombre de la entidad, el nombre del campo identificador y el paquete donde vive, para no chocar al unir el código.
 
 ---
 
@@ -96,7 +96,7 @@ Los datos personales deberán provenir del **Módulo Pacientes**, evitando dupli
 
 ---
 
-## 5. Antecedentes médicos — RF-HC-05 y RF-HC-06 (mi parte)
+## 5. Antecedentes médicos — RF-HC-05 y RF-HC-06 (parte de Renzo)
 
 El sistema deberá permitir registrar los antecedentes del paciente.
 
@@ -126,7 +126,7 @@ El sistema deberá permitir registrar los antecedentes del paciente.
 | Campo | Descripción |
 |---|---|
 | id | Identificador único |
-| historia clínica | Historia a la que pertenece (relación con la entidad del compañero) |
+| historia clínica | Historia a la que pertenece (relación con la entidad `HistoriaClinica` de Lucas) |
 | tipo | Personal o Familiar |
 | categoría | Enfermedad previa, cirugía, hospitalización, diabetes, hipertensión, etc. |
 | descripción | Detalle del antecedente |
@@ -136,7 +136,7 @@ El sistema deberá permitir registrar los antecedentes del paciente.
 
 ---
 
-## 6. Alergias — RF-HC-07 (mi parte)
+## 6. Alergias — RF-HC-07 (parte de Renzo)
 
 Se deberá registrar:
 
@@ -228,18 +228,18 @@ Marcados los que nos tocan.
 
 | Código | Requerimiento | Responsable |
 |---|---|---|
-| RF-HC-01 | Generar un número único de historia clínica para cada paciente | **Compañero** |
-| RF-HC-02 | Permitir consultar la historia clínica de un paciente | **Compañero** |
-| RF-HC-03 | Mostrar los datos básicos del paciente asociados a su historia clínica | **Compañero** |
+| RF-HC-01 | Generar un número único de historia clínica para cada paciente | **Lucas Inga** |
+| RF-HC-02 | Permitir consultar la historia clínica de un paciente | **Lucas Inga** |
+| RF-HC-03 | Mostrar los datos básicos del paciente asociados a su historia clínica | **Lucas Inga** |
 | RF-HC-04 | Mantener el historial de las atenciones realizadas al paciente | — |
 
 ### Antecedentes
 
 | Código | Requerimiento | Responsable |
 |---|---|---|
-| RF-HC-05 | Permitir registrar antecedentes personales | **Yo** |
-| RF-HC-06 | Permitir registrar antecedentes familiares | **Yo** |
-| RF-HC-07 | Permitir registrar alergias | **Yo** |
+| RF-HC-05 | Permitir registrar antecedentes personales | **Renzo León** |
+| RF-HC-06 | Permitir registrar antecedentes familiares | **Renzo León** |
+| RF-HC-07 | Permitir registrar alergias | **Renzo León** |
 
 ### Atención médica
 
@@ -317,7 +317,7 @@ HISTORIA CLÍNICA
 └── Auditoría
 ```
 
-La rama **Antecedentes** con sus tres hojas es exactamente mi parte. Las dos primeras entradas del menú son la parte de mi compañero.
+La rama **Antecedentes** con sus tres hojas es exactamente la parte de Renzo. Las dos primeras entradas del menú son la parte de Lucas.
 
 ---
 
@@ -417,13 +417,13 @@ Los cinco criterios pesan igual. Las pruebas de Postman valen lo mismo que todo 
 
 ## 13. Plan de trabajo
 
-### Acuerdos previos con el compañero
+### Acuerdos previos entre el equipo
 
 1. Definir juntos las entidades `Paciente` e `HistoriaClinica` antes de repartirse el código, porque las dos partes dependen de ellas.
 2. Fijar los nombres de paquetes y de tablas para evitar conflictos al unir.
 3. Trabajar en ramas separadas del repositorio y unir al final.
 
-### Mis tareas (RF-HC-05, RF-HC-06, RF-HC-07)
+### Tareas de Renzo (RF-HC-05, RF-HC-06, RF-HC-07)
 
 1. Crear la entidad `Antecedente` con su relación hacia la historia clínica.
 2. Crear la entidad `Alergia` con su relación hacia la historia clínica.
@@ -435,7 +435,7 @@ Los cinco criterios pesan igual. Las pruebas de Postman valen lo mismo que todo 
 8. Probar todos los endpoints en Postman y tomar capturas.
 9. Verificar en la base de datos que las llaves foráneas hacia la historia clínica se crearon.
 
-### Tareas de mi compañero (RF-HC-01, RF-HC-02, RF-HC-03)
+### Tareas de Lucas (RF-HC-01, RF-HC-02, RF-HC-03)
 
 1. Crear la entidad `HistoriaClinica` con su relación hacia `Paciente`.
 2. Generar el número único de historia clínica al registrar un paciente.
