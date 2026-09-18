@@ -1,78 +1,69 @@
 package com.hospital.historia_clinica.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.hospital.historia_clinica.model.HistoriaClinica;
+import com.hospital.historia_clinica.service.AlergiaService;
+import com.hospital.historia_clinica.service.AntecedenteFamiliarService;
+import com.hospital.historia_clinica.service.AntecedenteService;
 import com.hospital.historia_clinica.service.HistoriaClinicaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.hospital.historia_clinica.service.PacienteService;
 
-import java.util.List;
-import java.util.Map;
-
-@RestController
-@RequestMapping("/api/historias")
+@Controller
 public class HistoriaClinicaController {
 
     private final HistoriaClinicaService historiaClinicaService;
+    private final PacienteService pacienteService;
+    private final AntecedenteService antecedenteService;
+    private final AntecedenteFamiliarService antecedenteFamiliarService;
+    private final AlergiaService alergiaService;
 
-    @Autowired
-    public HistoriaClinicaController(HistoriaClinicaService historiaClinicaService) {
+    public HistoriaClinicaController(HistoriaClinicaService historiaClinicaService,
+                                      PacienteService pacienteService,
+                                      AntecedenteService antecedenteService,
+                                      AntecedenteFamiliarService antecedenteFamiliarService,
+                                      AlergiaService alergiaService) {
         this.historiaClinicaService = historiaClinicaService;
+        this.pacienteService = pacienteService;
+        this.antecedenteService = antecedenteService;
+        this.antecedenteFamiliarService = antecedenteFamiliarService;
+        this.alergiaService = alergiaService;
     }
 
-    // RF-HC-01: Generar número único de historia clínica para un paciente
-    @PostMapping
-    public ResponseEntity<HistoriaClinica> crear(@RequestBody Map<String, Long> body) {
-        Long pacienteId = body.get("pacienteId");
-        HistoriaClinica creada = historiaClinicaService.crear(pacienteId);
-        return new ResponseEntity<>(creada, HttpStatus.CREATED);
+    // RF-HC-02: listar las historias clinicas para poder consultarlas
+    @GetMapping("/historias")
+    public String listarHistorias(Model model) {
+        model.addAttribute("historias", historiaClinicaService.listarTodas());
+        return "historias";
     }
 
-    // RF-HC-02: Consultar la historia clínica de un paciente (por id de la propia historia)
-    @GetMapping("/{id}")
-    public ResponseEntity<HistoriaClinica> buscarPorId(@PathVariable Long id) {
-        return historiaClinicaService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    // RF-HC-01: elegir el paciente al que se le genera la historia
+    @GetMapping("/historias/nueva")
+    public String mostrarFormulario(Model model) {
+        model.addAttribute("pacientes", pacienteService.listarTodos());
+        return "historia-form";
     }
 
-    // RF-HC-03: Mostrar datos básicos del paciente asociados a su historia clínica
-    @GetMapping("/paciente/{pacienteId}")
-    public ResponseEntity<HistoriaClinica> buscarPorPacienteId(@PathVariable Long pacienteId) {
-        return historiaClinicaService.buscarPorPacienteId(pacienteId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping("/historias/guardar")
+    public String guardarHistoria(@RequestParam Long pacienteId) {
+        historiaClinicaService.crear(pacienteId);
+        return "redirect:/historias";
     }
 
-    @GetMapping
-    public ResponseEntity<List<HistoriaClinica>> listarTodas() {
-        return ResponseEntity.ok(historiaClinicaService.listarTodas());
+    // RF-HC-02 y RF-HC-03: consultar la historia y mostrar los datos basicos del paciente
+    @GetMapping("/historias/{id}")
+    public String verHistoria(@PathVariable Long id, Model model) {
+        HistoriaClinica historia = historiaClinicaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Historia clinica no encontrada"));
+        model.addAttribute("historia", historia);
+        model.addAttribute("antecedentes", antecedenteService.listarPorHistoria(id));
+        model.addAttribute("familiares", antecedenteFamiliarService.listarPorHistoria(id));
+        model.addAttribute("alergias", alergiaService.listarPorHistoria(id));
+        return "historia-detalle";
     }
-
-    // Completar el CRUD (actualizar estado)
-    @PutMapping("/{id}")
-    public ResponseEntity<HistoriaClinica> actualizar(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        String estado = body.get("estado");
-        HistoriaClinica actualizada = historiaClinicaService.actualizar(id, estado);
-        return ResponseEntity.ok(actualizada);
-    }
-
-    // Completar el CRUD (eliminar)
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        historiaClinicaService.eliminar(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{id}/condiciones/{condicionId}")
-    public ResponseEntity<HistoriaClinica> agregarCondicion(@PathVariable Long id, @PathVariable Long condicionId) {
-        return ResponseEntity.ok(historiaClinicaService.agregarCondicionFamiliar(id, condicionId));
-    }
-
-    @GetMapping("/{id}/condiciones")
-    public ResponseEntity<java.util.List<com.hospital.historia_clinica.model.CondicionMedica>> listarCondiciones(@PathVariable Long id) {
-        return ResponseEntity.ok(historiaClinicaService.listarCondicionesFamiliares(id));
-    }
-
 }

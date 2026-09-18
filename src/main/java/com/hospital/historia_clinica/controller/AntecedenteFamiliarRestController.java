@@ -51,7 +51,7 @@ public class AntecedenteFamiliarRestController {
         if (a == null) {
             return ResponseEntity.notFound().build();
         }
-        a.setHistoriaClinicaId(datos.getHistoriaClinicaId());
+        a.setHistoriaClinica(datos.getHistoriaClinica());
         a.setEnfermedad(datos.getEnfermedad());
         a.setParentesco(datos.getParentesco());
         a.setFechaRegistro(datos.getFechaRegistro());

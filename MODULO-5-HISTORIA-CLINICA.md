@@ -455,4 +455,10 @@ Los cinco criterios pesan igual. Las pruebas de Postman valen lo mismo que todo 
 
 ## 14. Estado actual del proyecto
 
-El repositorio ya tiene el proyecto Spring Boot creado y la conexión a MariaDB configurada. La base de datos `historia_clinica_db` ya existe y la aplicación arranca correctamente en el puerto 8080. Todavía no hay entidades, repositorios, servicios ni controladores: eso es lo que toca construir.
+El repositorio tiene el proyecto Spring Boot creado y la conexión a MariaDB configurada. La base de datos `historia_clinica_db` ya existe y la aplicación arranca correctamente en el puerto 8080.
+
+Las seis entidades del reparto (`Paciente`, `HistoriaClinica`, `Antecedente`, `AntecedenteFamiliar`, `Alergia`) están implementadas con sus cuatro capas (Entity, Repository, Service, Controller), además de `CondicionMedica` como catálogo de antecedentes familiares. `Antecedente`, `AntecedenteFamiliar` y `Alergia` se relacionan con `HistoriaClinica` mediante `@ManyToOne` real, y `HistoriaClinica` con `Paciente` mediante `@OneToOne`.
+
+Hay vistas Thymeleaf para las seis entidades, un panel de navegación en `/panel`, y API REST completa para todas. Ver el detalle en el [README](README.md).
+
+Falta: pasar `ddl-auto` a `update`, probar y documentar todos los endpoints en Postman, y que el equipo decida si unifica `AntecedenteFamiliar` con el catálogo `CondicionMedica`.

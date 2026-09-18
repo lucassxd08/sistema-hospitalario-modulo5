@@ -12,6 +12,7 @@
     <h2>Alergias</h2>
     <p>RF-HC-07: registro de alergias del paciente.</p>
 
+    <a href="/panel" class="btn btn-outline-secondary mb-3">Inicio</a>
     <a href="/alergias/nuevo" class="btn btn-primary mb-3">Nueva alergia</a>
     <a href="/antecedentes" class="btn btn-secondary mb-3">Ver antecedentes personales</a>
     <a href="/antecedentes-familiares" class="btn btn-secondary mb-3">Ver antecedentes familiares</a>
@@ -32,7 +33,7 @@
         <tbody>
         <tr th:each="a : ${alergias}">
             <td th:text="${a.id}"></td>
-            <td th:text="${a.historiaClinicaId}"></td>
+            <td th:text="${a.historiaClinica?.numeroHistoria}"></td>
             <td th:text="${a.nombre}"></td>
             <td th:text="${a.tipo}"></td>
             <td th:text="${a.reaccion}"></td>

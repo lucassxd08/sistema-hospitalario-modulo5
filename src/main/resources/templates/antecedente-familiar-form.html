@@ -14,8 +14,8 @@
     <form action="/antecedentes-familiares/guardar" method="post" th:object="${antecedente}">
 
         <div class="mb-3">
-            <label class="form-label">Numero de historia clinica</label>
-            <input type="number" class="form-control" th:field="*{historiaClinicaId}">
+            <label class="form-label">ID de la historia clinica</label>
+            <input type="number" class="form-control" th:field="*{historiaClinica.id}">
         </div>
 
         <div class="mb-3">

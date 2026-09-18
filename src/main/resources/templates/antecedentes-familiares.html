@@ -12,6 +12,7 @@
     <h2>Antecedentes familiares</h2>
     <p>RF-HC-06: registro de antecedentes familiares del paciente.</p>
 
+    <a href="/panel" class="btn btn-outline-secondary mb-3">Inicio</a>
     <a href="/antecedentes-familiares/nuevo" class="btn btn-primary mb-3">Nuevo antecedente familiar</a>
     <a href="/antecedentes" class="btn btn-secondary mb-3">Ver antecedentes personales</a>
     <a href="/alergias" class="btn btn-secondary mb-3">Ver alergias</a>
@@ -31,7 +32,7 @@
         <tbody>
         <tr th:each="a : ${antecedentes}">
             <td th:text="${a.id}"></td>
-            <td th:text="${a.historiaClinicaId}"></td>
+            <td th:text="${a.historiaClinica?.numeroHistoria}"></td>
             <td th:text="${a.enfermedad}"></td>
             <td th:text="${a.parentesco}"></td>
             <td th:text="${a.fechaRegistro}"></td>

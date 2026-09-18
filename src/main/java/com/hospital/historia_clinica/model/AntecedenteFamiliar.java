@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "antecedente_familiar")
@@ -14,7 +16,9 @@ public class AntecedenteFamiliar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long historiaClinicaId;
+    @ManyToOne
+    @JoinColumn(name = "historia_clinica_id", nullable = false)
+    private HistoriaClinica historiaClinica;
 
     private String enfermedad;
 
@@ -28,9 +32,9 @@ public class AntecedenteFamiliar {
     public AntecedenteFamiliar() {
     }
 
-    public AntecedenteFamiliar(Long historiaClinicaId, String enfermedad, String parentesco,
+    public AntecedenteFamiliar(HistoriaClinica historiaClinica, String enfermedad, String parentesco,
                                String fechaRegistro, String observaciones) {
-        this.historiaClinicaId = historiaClinicaId;
+        this.historiaClinica = historiaClinica;
         this.enfermedad = enfermedad;
         this.parentesco = parentesco;
         this.fechaRegistro = fechaRegistro;
@@ -45,12 +49,12 @@ public class AntecedenteFamiliar {
         this.id = id;
     }
 
-    public Long getHistoriaClinicaId() {
-        return historiaClinicaId;
+    public HistoriaClinica getHistoriaClinica() {
+        return historiaClinica;
     }
 
-    public void setHistoriaClinicaId(Long historiaClinicaId) {
-        this.historiaClinicaId = historiaClinicaId;
+    public void setHistoriaClinica(HistoriaClinica historiaClinica) {
+        this.historiaClinica = historiaClinica;
     }
 
     public String getEnfermedad() {

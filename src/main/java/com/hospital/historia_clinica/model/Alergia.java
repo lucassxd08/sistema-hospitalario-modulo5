@@ -17,7 +17,7 @@ public class Alergia {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "historia_clinica_id")
+    @JoinColumn(name = "historia_clinica_id", nullable = false)
     private HistoriaClinica historiaClinica;
 
     private String nombre;

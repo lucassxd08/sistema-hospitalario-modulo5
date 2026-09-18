@@ -49,25 +49,43 @@ Antecedentes y alergias ya no guardan `historiaClinicaId` como número suelto: a
 
 Entidad `Antecedente` con las cuatro capas completas y vistas Thymeleaf.
 
-Campos: `id`, `historiaClinicaId`, `categoria`, `descripcion`, `fechaRegistro`, `observaciones`.
+Campos: `id`, `historiaClinica` (relación `@ManyToOne`, obligatoria), `categoria`, `descripcion`, `fechaRegistro`, `observaciones`.
 
 Las categorías que maneja el formulario salen del documento del módulo: enfermedad previa, cirugía, hospitalización, enfermedad crónica, traumatismo, transfusión y otro.
+
+El `AntecedenteService` no guarda un registro si la historia clínica indicada no existe: la busca primero con `historiaClinicaRepository.findById(...).orElseThrow(...)`, igual que se hizo en el laboratorio de la Semana 4 con Producto y Categoría.
 
 ### RF-HC-06 — Antecedentes familiares
 
 Entidad `AntecedenteFamiliar` con las cuatro capas completas y vistas Thymeleaf.
 
-Campos: `id`, `historiaClinicaId`, `enfermedad`, `parentesco`, `fechaRegistro`, `observaciones`.
+Campos: `id`, `historiaClinica` (relación `@ManyToOne`, obligatoria), `enfermedad`, `parentesco`, `fechaRegistro`, `observaciones`.
 
 Las enfermedades del formulario son las del documento: diabetes, hipertensión, enfermedad cardiovascular, cáncer, enfermedad hereditaria y otro. El parentesco permite padre, madre, hermano, hermana, abuelo, abuela y otro.
+
+Antes esta entidad guardaba `historiaClinicaId` como un número suelto, sin relación real. Ahora usa `@ManyToOne` hacia `HistoriaClinica`, igual que `Antecedente` y `Alergia`, con la misma validación de que la historia clínica debe existir.
 
 ### RF-HC-07 — Alergias
 
 Entidad `Alergia` con las cuatro capas completas y vistas Thymeleaf.
 
-Campos: `id`, `historiaClinicaId`, `nombre`, `tipo`, `reaccion`, `fechaRegistro`, `observaciones`.
+Campos: `id`, `historiaClinica` (relación `@ManyToOne`, obligatoria), `nombre`, `tipo`, `reaccion`, `fechaRegistro`, `observaciones`.
 
 Los tipos que maneja el formulario son medicamento, alimento, ambiental y otro. El ejemplo del documento del módulo es una alergia a la penicilina con erupción cutánea como reacción.
+
+### Vistas de Paciente e Historia Clínica
+
+Se agregaron los controladores `PacienteController` y `HistoriaClinicaController` (vistas Thymeleaf), separados de `PacienteRestController` y `HistoriaClinicaRestController` (API REST), siguiendo el mismo patrón que ya usaban Antecedente, Antecedente familiar y Alergia.
+
+- `/pacientes`: tabla de pacientes registrados y formulario para crear uno nuevo.
+- `/historias`: tabla de historias clínicas (número, paciente, fecha de apertura, estado) y formulario para generar una nueva eligiendo el paciente de una lista.
+- `/historias/{id}`: ficha de la historia clínica con los datos básicos del paciente y sus antecedentes personales, familiares y alergias — resuelve RF-HC-02 (consultar) y RF-HC-03 (mostrar datos básicos).
+
+Para armar esa ficha se agregaron las consultas derivadas `findByHistoriaClinicaId` en los repositorios de `Antecedente`, `AntecedenteFamiliar` y `Alergia`, igual que `findByCategoriaId` en el laboratorio de la Semana 4.
+
+### Panel de navegación
+
+`PanelController` muestra en `/` y en `/panel` un menú con enlaces a Pacientes, Historias, Antecedentes personales, Antecedentes familiares y Alergias. Cada listado tiene un botón "Inicio" para volver a este panel.
 
 ---
 
@@ -133,10 +151,15 @@ Los tipos que maneja el formulario son medicamento, alimento, ambiental y otro. 
 
 ### Ejemplos para Postman
 
+Los tres recursos reciben la historia clínica como objeto anidado con su `id` (igual que Producto recibía `categoria: { "id": 1 }` en el laboratorio de la Semana 4), no como un número suelto:
+
 ```
+POST http://localhost:8080/api/historias
+{ "pacienteId": 1 }
+
 POST http://localhost:8080/api/antecedentes
 {
-  "historiaClinicaId": 125,
+  "historiaClinica": { "id": 1 },
   "categoria": "Cirugia",
   "descripcion": "Apendicectomia",
   "fechaRegistro": "11/09/2026",
@@ -145,7 +168,7 @@ POST http://localhost:8080/api/antecedentes
 
 POST http://localhost:8080/api/antecedentes-familiares
 {
-  "historiaClinicaId": 125,
+  "historiaClinica": { "id": 1 },
   "enfermedad": "Diabetes",
   "parentesco": "Padre",
   "fechaRegistro": "11/09/2026",
@@ -154,7 +177,7 @@ POST http://localhost:8080/api/antecedentes-familiares
 
 POST http://localhost:8080/api/alergias
 {
-  "historiaClinicaId": 125,
+  "historiaClinica": { "id": 1 },
   "nombre": "Penicilina",
   "tipo": "Medicamento",
   "reaccion": "Erupcion cutanea",
@@ -169,6 +192,12 @@ POST http://localhost:8080/api/alergias
 
 | Ruta | Qué muestra |
 |---|---|
+| `/` o `/panel` | Panel de navegación con enlaces a todo el módulo |
+| `/pacientes` | Tabla con los pacientes registrados |
+| `/pacientes/nuevo` | Formulario de registro de paciente |
+| `/historias` | Tabla con las historias clínicas |
+| `/historias/nueva` | Formulario para generar una historia clínica eligiendo el paciente |
+| `/historias/{id}` | Ficha de la historia clínica: datos del paciente, antecedentes y alergias |
 | `/antecedentes` | Tabla con los antecedentes personales |
 | `/antecedentes/nuevo` | Formulario de registro de antecedente personal |
 | `/antecedentes-familiares` | Tabla con los antecedentes familiares |
@@ -186,7 +215,7 @@ La base se llama `historia_clinica_db`. Hay que crearla una sola vez:
 CREATE DATABASE historia_clinica_db;
 ```
 
-Las tablas las genera Hibernate solo al arrancar, porque `application.properties` tiene `ddl-auto=update`. Hasta ahora se crean `paciente`, `historia_clinica`, `condicion_medica`, `historia_condicion` (tabla intermedia del `@ManyToMany`), `antecedente`, `antecedente_familiar` y `alergia`.
+Las tablas las genera Hibernate solo al arrancar. `application.properties` tiene `ddl-auto=create-drop`, es decir que Hibernate borra y vuelve a crear todas las tablas cada vez que se reinicia la aplicación — útil mientras se sigue definiendo el modelo, pero hay que cambiarlo a `update` antes de la entrega para no perder los datos de prueba entre ejecuciones. Hasta ahora se crean `paciente`, `historia_clinica`, `condicion_medica`, `historia_condicion` (tabla intermedia del `@ManyToMany`), `antecedente`, `antecedente_familiar` y `alergia`.
 
 La configuración de conexión está en `src/main/resources/application.properties` y usa el usuario `root` sin contraseña.
 
@@ -204,7 +233,8 @@ La aplicación queda en http://localhost:8080
 
 ## Pendiente
 
-- Vistas Thymeleaf para pacientes e historias clínicas (por ahora solo tienen API REST, sin formularios ni tablas).
-- Vista de panel con el menú de navegación del módulo.
-- Probar en Postman los endpoints de `Paciente`, `HistoriaClinica` y `CondicionMedica`, y documentar las capturas.
-- Revisar la relación `AntecedenteFamiliar` frente a `CondicionMedica`: hay dos formas de registrar antecedentes familiares (la entidad propia de Renzo y el catálogo `@ManyToMany` de Lucas) y conviene unificar antes de la entrega.
+- Cambiar `ddl-auto` de `create-drop` a `update` en `application.properties` antes de la entrega, para no perder los datos cada vez que se reinicia la aplicación.
+- Probar todos los endpoints en Postman (incluidos los nuevos de `Paciente` y `HistoriaClinica`) y tomar las capturas para el informe.
+- Verificar en la base de datos que las llaves foráneas de `antecedente`, `antecedente_familiar` y `alergia` hacia `historia_clinica` se crearon correctamente.
+- Revisar la relación `AntecedenteFamiliar` frente a `CondicionMedica`: hay dos formas de registrar antecedentes familiares (la entidad propia de Renzo, ya con relación real hacia `HistoriaClinica`, y el catálogo `@ManyToMany` de Lucas) y conviene que el equipo decida si se unifican antes de la entrega.
+- Capturas de pantalla del código y evidencia de la base de datos para el informe final.
